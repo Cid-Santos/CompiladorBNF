@@ -1,0 +1,6 @@
+FIRST(<S>) = {"a"}
+FIRST(<Q>) = {"a", ""}
+FIRST(<P>) = {""}
+FOLLOW(<S>) = {$}
+FOLLOW(<Q>) = {"b"}
+FOLLOW(<P>) = {"b"}
