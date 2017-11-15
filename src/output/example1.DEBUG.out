@@ -1,7 +1,3 @@
-   ENTRADA   
-<S>  ::= "a" <Q> "b" <P> 
- <Q>  ::= "a" <Q>  |  <P> "b" | ""
- <P>  ::= ""
 
    TOKENS   
 <S> NONTERMINAL
@@ -18,10 +14,10 @@
 <P> NONTERMINAL
 "b" TERMINAL
 | PIPE
-"" TERMINAL
+"a" TERMINAL
 <P> NONTERMINAL
 ::= PRODUCAO
-"" TERMINAL
+"b" TERMINAL
 
    GRAMÁTICA   
 Não Terminais: 
@@ -33,13 +29,13 @@ Produção:
 <S> ::= "a" <Q> "b" <P> 
 <Q> ::= "a" <Q> 
 <Q> ::= <P> "b" 
-<Q> ::= "" 
-<P> ::= "" 
+<Q> ::= "a" 
+<P> ::= "b" 
 
    FIRST   
 FIRST(<S>) = {"a"}
-FIRST(<Q>) = {"a", ""}
-FIRST(<P>) = {""}
+FIRST(<Q>) = {"a", "b"}
+FIRST(<P>) = {"b"}
 
    FOLLOW   
 FOLLOW(<S>) = {$}

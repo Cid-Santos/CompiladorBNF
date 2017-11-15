@@ -11,7 +11,7 @@ public class Production {
 
     public String lhs;
     public String[] rhs;
-    private Production(String lhs, String[] rhs) {
+    public Production(String lhs, String[] rhs) {
         this.lhs = lhs; this.rhs = rhs;
     }
     private static Map<Pair<String, String[]>, Production> map =
@@ -24,6 +24,10 @@ public class Production {
             map.put(pair, ret);
         }
         return ret;
+    }
+
+    public Production() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     public String toString() {
         StringBuffer ret = new StringBuffer();

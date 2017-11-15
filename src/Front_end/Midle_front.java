@@ -1,41 +1,59 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Front_end;
 
-import static Front_end.Scanner.trimAll;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
+import static Front_end.CompiladorBNF.appendToOutput;
+import static Front_end.CompiladorBNF.deleteOutput;
+import static Front_end.CompiladorBNF.getInput;
+import static Front_end.CompiladorBNF.getInputName;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  *
- * @author Cid
+ * @author pedro
  */
-public class CompiladorBNF {
+public class Midle_front {
 
     private static final Boolean DEBUG = true;
-    private static String inputString = new String();
+    public static String inputString = new String();
+    private static String caminho_arquivo = "src/input/example1";
+    public static String fileName = "exemplo1";
+    public static Token[] tokens;
+    public static Grammar grammar;
 
-    /**
-     * @param args os argumentos da linha de comando
-     */
-    public static void main(String[] args) {
-        // Definir arquivos de entrada
+    public String ler_arquio() {
 
-        File file = new File("src/input/example1");
+        File file = new File(caminho_arquivo);
 
         String path = file.getPath(); //irá retornar "\src\path"
 
-        String fileName = getInputName(path);
+        fileName = getInputName(path);
 
         inputString = getInput(path);//Leitura do arquivo de entrada 
 
+        if (DEBUG) {
+            // INPUT
+            System.out.println("   ENTRADA   ");
+            appendToOutput(fileName + ".DEBUG", "   ENTRADA   \n");
+            System.out.println(inputString);//Imprime entrada
+            appendToOutput(fileName + ".DEBUG", inputString + "\n");//Grava em arquivo
+        }
+        return inputString;
+    }
+
+    public String processa_token() {
+
+        String dados = "";
         // Obtem Array Token
         String[] rawTokens = inputString.split("\\s+");//Fatia o arquivo de entrada separado por espaco
 
         // Inicia Array de Token 
-        Token[] tokens = new Token[rawTokens.length];
+        tokens = new Token[rawTokens.length];
 
         // Exclua o arquivo de saída se existir
         deleteOutput(fileName);
@@ -43,13 +61,8 @@ public class CompiladorBNF {
 
         // Seção DEBUG
         if (DEBUG) {
-            // INPUT
-            System.out.println("   ENTRADA   ");
-            appendToOutput(fileName + ".DEBUG", "   ENTRADA   \n");
-            System.out.println(inputString);//Imprime entrada
-            appendToOutput(fileName + ".DEBUG", inputString + "\n");//Grava em arquivo
             // TOKEN
-            System.out.println("\n   TOKENS   ");
+            dados = "\n   TOKENS   ";
             appendToOutput(fileName + ".DEBUG", "\n   TOKENS   \n");
         }
 
@@ -62,37 +75,65 @@ public class CompiladorBNF {
             tokens[count] = token;
             if (DEBUG) {
                 token.oneline();
+                dados = dados + "\n" + token.token + "\t" + token.message;
                 appendToOutput(fileName + ".DEBUG", token.token + " " + token.type + "\n");
             }
             count++;
         }
+        return dados;
+    }
 
+    public String processa_gramatica() {
         // DEBUG Section
         if (DEBUG) {
-            System.out.println("\n   GRAMÁTICA   ");
+            System.out.println("\n\nGRAMÁTICA   ");
             appendToOutput(fileName + ".DEBUG", "\n   GRAMÁTICA   \n");
         }
 
         // Inicializa o Grammar Array
-        Grammar grammar = new Grammar(tokens);
+        grammar = new Grammar(tokens);
         if ("ERRO".equals(grammar.type)) {
             System.out.println(grammar.message);
             appendToOutput(fileName, grammar.message);
             if (DEBUG) {
                 appendToOutput(fileName + ".DEBUG", grammar.message);
             }
-            return;
         } else {
-            System.out.print(grammar.toString());
             // DEBUG Section
             if (DEBUG) {
                 appendToOutput(fileName + ".DEBUG", grammar.toString());
             }
         }
+        return grammar.toString();
+    }
 
-        // DEBUG Section
+    public Set<String> terminais() {
+        Set<String> terminals = new LinkedHashSet<>();
+        for (int i = 0; i < tokens.length; i++) {
+            if (("TERMINAL".equals(tokens[i].type) && (!terminals.contains(tokens[i].token)))) {
+                terminals.add(tokens[i].token);
+            }
+        }
+
+        return terminals;
+    }
+
+    public Set<String> nonterminais() {
+        Set<String> nonterminals = new LinkedHashSet<>();
+        for (int i = 0; i < tokens.length; i++) {
+            if ("NONTERMINAL".equals(tokens[i].type) && (!nonterminals.contains(tokens[i].token))) {
+                nonterminals.add(tokens[i].token);
+            }
+        }
+
+        return nonterminals;
+    }
+
+
+
+    public String processa_first_follow() {
+        String first_follow = "\n";
         if (DEBUG) {
-            System.out.println("\n   FIRST   ");
             appendToOutput(fileName + ".DEBUG", "\n   FIRST   \n");
         }
 
@@ -113,14 +154,14 @@ public class CompiladorBNF {
                     appendToOutput(fileName + ".DEBUG", firstString + "\n");
                 }
                 // Saida do  conjuntos First 
-                System.out.println(firstString);
+                first_follow = first_follow + firstString + "\n";
                 appendToOutput(fileName, firstString + "\n");
             }
         }
 
         // DEBUG Section
         if (DEBUG) {
-            System.out.println("\n   FOLLOW   ");
+            first_follow = first_follow + "\n";
             appendToOutput(fileName + ".DEBUG", "\n   FOLLOW   \n");
         }
         // Calcula os conjuntos FOLLOW
@@ -140,61 +181,12 @@ public class CompiladorBNF {
                     appendToOutput(fileName + ".DEBUG", followString + "\n");
                 }
                 // Saida do  conjuntos First
-                System.out.println(followString);
+                first_follow = first_follow + followString + "\n";
                 appendToOutput(fileName, followString + "\n");
             }
         }
+
+        return first_follow;
     }
 
-    // Excluir arquivo de saída
-    public static void deleteOutput(String file) {
-        File f = new File("src/output/" + file + ".out");
-        if (f.exists()) {
-            f.delete();
-        }
-    }
-
-    //Anexar ao arquivo de saída
-    public static void appendToOutput(String file, String str) {
-        try {
-            File f = new File("src/output/" + file + ".out");
-            if (!f.exists()) {
-                f.createNewFile();
-            }
-            FileWriter fileWritter = new FileWriter("src/output/" + file + ".out", true);
-            try (BufferedWriter bufferWritter = new BufferedWriter(fileWritter)) {
-                bufferWritter.write(str);
-            }
-        } catch (IOException e) {
-        }
-    }
-
-    // Obter o nome do arquivo de entrada
-    public static String getInputName(String file) {
-        File f = new File(file);
-        return f.getName();
-    }
-
-    // Arquivo para String
-    public static String getInput(String file) {
-        String result = null;
-        DataInputStream in = null;
-        try {
-            File f = new File(file);
-            byte[] buffer = new byte[(int) f.length()];
-            in = new DataInputStream(new FileInputStream(f));
-            in.readFully(buffer);
-            result = new String(buffer);
-        } catch (IOException e) {
-            throw new RuntimeException("IO Erro", e);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-            }
-        }
-        return trimAll(result);
-    }
-
-   
 }

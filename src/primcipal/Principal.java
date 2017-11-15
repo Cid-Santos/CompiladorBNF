@@ -1,17 +1,30 @@
 package primcipal;
 
+import Back_end.Generator;
+import Back_end.Production;
+import Back_end.Util;
+import Front_end.Grammar;
+import Front_end.Midle_front;
+import Front_end.Statment;
+import java.util.LinkedHashSet;
+import java.util.Scanner;
+import java.util.Set;
+import sun.security.krb5.internal.rcache.DflCache;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Cid
  */
 public class Principal extends javax.swing.JFrame {
 
+        public static Set<String> terminais;
+        public static Set<String> nonterminais;
+        public static Set<Production> productions;
     /**
      * Creates new form Principal
      */
@@ -33,18 +46,21 @@ public class Principal extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        jTParsing = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        jTOutPut = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -66,9 +82,9 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Parsing BNF"));
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane4.setViewportView(jTextArea4);
+        jTParsing.setColumns(20);
+        jTParsing.setRows(5);
+        jScrollPane4.setViewportView(jTParsing);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -85,9 +101,9 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Output"));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        jTOutPut.setColumns(20);
+        jTOutPut.setRows(5);
+        jScrollPane2.setViewportView(jTOutPut);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -135,6 +151,15 @@ public class Principal extends javax.swing.JFrame {
         jSplitPane3.setRightComponent(jPanel2);
 
         jMenu1.setText("File");
+
+        jMenuItem6.setText("Abrir Gramatica");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -143,13 +168,39 @@ public class Principal extends javax.swing.JFrame {
         jMenu5.setText("Front end");
 
         jMenuItem5.setText("Token");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu5.add(jMenuItem5);
+
+        jMenuItem7.setText("Validar Gramatica");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem7);
+
+        jMenuItem8.setText("First/Follow");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem8);
 
         jMenuBar1.add(jMenu5);
 
         jMenu3.setText("Back end");
 
         jMenuItem1.setText("LR(0)");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem1);
 
         jMenuItem2.setText("LR(1)");
@@ -181,6 +232,103 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void convert_grammar(){
+        Midle_front aux = new Midle_front();
+        
+        terminais = aux.terminais();
+        nonterminais = aux.nonterminais();
+        productions  = new  LinkedHashSet<>();
+        
+        Grammar grammar = Midle_front.grammar;
+        String nonTerminal = "";
+        String[] definitions = new String[100];
+        Production production;
+        
+        Statment[] statments = grammar.statments; 
+        for (Statment statment : statments) {
+            
+            if (statment != null) {
+                nonTerminal = statment.nonTerminal.token;
+                int i=0;
+                while(statment.definitions[i]!=null){
+                    definitions[i] = statment.definitions[i].token;
+                    i++;
+                }
+            production =  new Production(nonTerminal, definitions);
+            productions.add(production);
+            definitions=new String[100];
+            }
+        }       
+    }
+    
+    
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+   
+        Midle_front aux = new Midle_front();
+        if (Midle_front.grammar!=null) {
+            String first_follow = aux.processa_first_follow();
+            jTOutPut.setText(jTOutPut.getText() + first_follow);
+        } else {
+
+            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+        }
+
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // Definir arquivos de entrada
+        Midle_front aux = new Midle_front();
+        Midle_front.inputString = aux.ler_arquio();
+        jTParsing.setText("ENTRADA \n" + Midle_front.inputString + "\n");
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        Midle_front aux = new Midle_front();
+        if (!Midle_front.inputString.equals("")) {
+            String token = aux.processa_token();
+            jTOutPut.setText(token);
+        } else {
+
+            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+        }
+
+        // aux.processa_first_follow();
+        // aux.gramatica();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        Midle_front aux = new Midle_front();
+
+        if (Midle_front.tokens.length > 0) {
+            String gramar = aux.processa_gramatica();
+            jTOutPut.setText(jTOutPut.getText() + "\n\nGRAMATICA \n"+gramar);
+        } else {
+
+            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+        }
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        convert_grammar();
+        
+        Back_end.Grammar grammar = new Back_end.Grammar();
+        grammar.nonterminals = nonterminais;
+        grammar.terminals = terminais;
+        grammar.productions = productions;
+        
+        Generator jlr = new Generator(grammar);
+        try {
+            jlr.computeFirstFollowNullable();
+            jlr.generateLR0Table();
+            jlr.generateOutput();
+        } catch(Back_end.Error e) {
+            System.err.println("Error performing LR(0) construction: "+e);
+            System.exit(1);
+            return;
+        } 
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,6 +377,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -238,8 +389,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane3;
+    private javax.swing.JTextArea jTOutPut;
+    private javax.swing.JTextArea jTParsing;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea4;
     // End of variables declaration//GEN-END:variables
 }

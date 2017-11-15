@@ -11,10 +11,10 @@ import java.util.Set;
  */
 public class Grammar {
 
-    Set<String> terminals = new LinkedHashSet<>();
-    Set<String> nonterminals = new LinkedHashSet<>();
-    Set<Production> productions = new LinkedHashSet<>();
-    String start;
+    public Set<String> terminals = new LinkedHashSet<>();
+    public Set<String> nonterminals = new LinkedHashSet<>();
+    public Set<Production> productions = new LinkedHashSet<>();
+    public String start;
 
     public boolean isTerminal(String s) {
         return terminals.contains(s);
