@@ -25,6 +25,7 @@ public class Principal extends javax.swing.JFrame {
         public static Set<String> terminais;
         public static Set<String> nonterminais;
         public static Set<Production> productions;
+        public static String start; 
     /**
      * Creates new form Principal
      */
@@ -232,7 +233,15 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    public int conta(Statment s){
+        int i =0;
+        while(s.definitions[i]!=null){
+            i++;
+        }    
+        
+        return i;
+        
+    } 
     private void convert_grammar(){
         Midle_front aux = new Midle_front();
         
@@ -242,22 +251,27 @@ public class Principal extends javax.swing.JFrame {
         
         Grammar grammar = Midle_front.grammar;
         String nonTerminal = "";
-        String[] definitions = new String[100];
         Production production;
-        
+        int cont = 0;
+        int pega = 0;
         Statment[] statments = grammar.statments; 
         for (Statment statment : statments) {
             
             if (statment != null) {
+                if (pega == 0){
+                    start = statment.nonTerminal.token;
+                    pega++;
+                }
                 nonTerminal = statment.nonTerminal.token;
                 int i=0;
+                cont = conta(statment);
+                String[] definitions = new String[cont];
                 while(statment.definitions[i]!=null){
                     definitions[i] = statment.definitions[i].token;
                     i++;
                 }
             production =  new Production(nonTerminal, definitions);
             productions.add(production);
-            definitions=new String[100];
             }
         }       
     }
@@ -317,6 +331,7 @@ public class Principal extends javax.swing.JFrame {
         grammar.nonterminals = nonterminais;
         grammar.terminals = terminais;
         grammar.productions = productions;
+        grammar.start = start;
         
         Generator jlr = new Generator(grammar);
         try {
