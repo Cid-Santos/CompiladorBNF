@@ -59,11 +59,6 @@ public final class Token {
         }
     }
 
-    // Imprimir vista online
-    public void oneline() {
-        System.out.printf("%1$-15s\t%2$-1s\n", token, message);
-    }
-
     // Imprima todos os vars para token
     public void debug() {
         System.out.println("Token: " + token);

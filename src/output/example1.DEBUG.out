@@ -13,8 +13,6 @@
 | PIPE
 <P> NONTERMINAL
 "b" TERMINAL
-| PIPE
-"a" TERMINAL
 <P> NONTERMINAL
 ::= PRODUCAO
 "b" TERMINAL
@@ -29,15 +27,4 @@ Produção:
 <S> ::= "a" <Q> "b" <P> 
 <Q> ::= "a" <Q> 
 <Q> ::= <P> "b" 
-<Q> ::= "a" 
 <P> ::= "b" 
-
-   FIRST   
-FIRST(<S>) = {"a"}
-FIRST(<Q>) = {"a", "b"}
-FIRST(<P>) = {"b"}
-
-   FOLLOW   
-FOLLOW(<S>) = {$}
-FOLLOW(<Q>) = {"b"}
-FOLLOW(<P>) = {"b"}

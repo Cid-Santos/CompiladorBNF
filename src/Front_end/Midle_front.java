@@ -5,13 +5,16 @@
  */
 package Front_end;
 
-import static Front_end.CompiladorBNF.appendToOutput;
-import static Front_end.CompiladorBNF.deleteOutput;
-import static Front_end.CompiladorBNF.getInput;
-import static Front_end.CompiladorBNF.getInputName;
+import static Front_end.Scanner.trimAll;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,45 +30,32 @@ public class Midle_front {
     public static Grammar grammar;
 
     public String ler_arquio() {
-
         File file = new File(caminho_arquivo);
-
         String path = file.getPath(); //irá retornar "\src\path"
-
         fileName = getInputName(path);
-
         inputString = getInput(path);//Leitura do arquivo de entrada 
-
         if (DEBUG) {
-            // INPUT
-            System.out.println("   ENTRADA   ");
             appendToOutput(fileName + ".DEBUG", "   ENTRADA   \n");
-            System.out.println(inputString);//Imprime entrada
             appendToOutput(fileName + ".DEBUG", inputString + "\n");//Grava em arquivo
         }
         return inputString;
     }
 
     public String processa_token() {
-
         String dados = "";
         // Obtem Array Token
         String[] rawTokens = inputString.split("\\s+");//Fatia o arquivo de entrada separado por espaco
-
         // Inicia Array de Token 
         tokens = new Token[rawTokens.length];
-
         // Exclua o arquivo de saída se existir
         deleteOutput(fileName);
         deleteOutput(fileName + ".DEBUG");
-
         // Seção DEBUG
         if (DEBUG) {
             // TOKEN
             dados = "\n   TOKENS   ";
             appendToOutput(fileName + ".DEBUG", "\n   TOKENS   \n");
         }
-
         //Create Tokens Array (Para cada Token em Raw Token Array DO :)
         int count = 0;
         for (String arg : rawTokens) {
@@ -74,7 +64,6 @@ public class Midle_front {
             // Alocar Token Object para conjunto de token
             tokens[count] = token;
             if (DEBUG) {
-                token.oneline();
                 dados = dados + "\n" + token.token + "\t" + token.message;
                 appendToOutput(fileName + ".DEBUG", token.token + " " + token.type + "\n");
             }
@@ -86,14 +75,12 @@ public class Midle_front {
     public String processa_gramatica() {
         // DEBUG Section
         if (DEBUG) {
-            System.out.println("\n\nGRAMÁTICA   ");
             appendToOutput(fileName + ".DEBUG", "\n   GRAMÁTICA   \n");
         }
-
         // Inicializa o Grammar Array
         grammar = new Grammar(tokens);
         if ("ERRO".equals(grammar.type)) {
-            System.out.println(grammar.message);
+            JOptionPane.showMessageDialog(null, grammar.message, "Erro", JOptionPane.ERROR_MESSAGE);
             appendToOutput(fileName, grammar.message);
             if (DEBUG) {
                 appendToOutput(fileName + ".DEBUG", grammar.message);
@@ -109,34 +96,29 @@ public class Midle_front {
 
     public Set<String> terminais() {
         Set<String> terminals = new LinkedHashSet<>();
-        for (int i = 0; i < tokens.length; i++) {
-            if (("TERMINAL".equals(tokens[i].type) && (!terminals.contains(tokens[i].token)))) {
-                terminals.add(tokens[i].token);
+        for (Token token : tokens) {
+            if ("TERMINAL".equals(token.type) && (!terminals.contains(token.token))) {
+                terminals.add(token.token);
             }
         }
-
         return terminals;
     }
 
     public Set<String> nonterminais() {
         Set<String> nonterminals = new LinkedHashSet<>();
-        for (int i = 0; i < tokens.length; i++) {
-            if ("NONTERMINAL".equals(tokens[i].type) && (!nonterminals.contains(tokens[i].token))) {
-                nonterminals.add(tokens[i].token);
+        for (Token token : tokens) {
+            if ("NONTERMINAL".equals(token.type) && (!nonterminals.contains(token.token))) {
+                nonterminals.add(token.token);
             }
         }
-
         return nonterminals;
     }
-
-
 
     public String processa_first_follow() {
         String first_follow = "\n";
         if (DEBUG) {
             appendToOutput(fileName + ".DEBUG", "\n   FIRST   \n");
         }
-
         //Calcula os conjuntos First 
         for (Token nonTerminal : grammar.nonTerminals) {
             if (nonTerminal != null) {
@@ -158,7 +140,6 @@ public class Midle_front {
                 appendToOutput(fileName, firstString + "\n");
             }
         }
-
         // DEBUG Section
         if (DEBUG) {
             first_follow = first_follow + "\n";
@@ -185,8 +166,56 @@ public class Midle_front {
                 appendToOutput(fileName, followString + "\n");
             }
         }
-
         return first_follow;
     }
 
+    // Excluir arquivo de saída
+    public static void deleteOutput(String file) {
+        File f = new File("src/output/" + file + ".out");
+        if (f.exists()) {
+            f.delete();
+        }
+    }
+
+    //Anexar ao arquivo de saída
+    public static void appendToOutput(String file, String str) {
+        try {
+            File f = new File("src/output/" + file + ".out");
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileWriter fileWritter = new FileWriter("src/output/" + file + ".out", true);
+            try (BufferedWriter bufferWritter = new BufferedWriter(fileWritter)) {
+                bufferWritter.write(str);
+            }
+        } catch (IOException e) {
+        }
+    }
+
+    // Obter o nome do arquivo de entrada
+    public static String getInputName(String file) {
+        File f = new File(file);
+        return f.getName();
+    }
+
+    // Arquivo para String
+    public static String getInput(String file) {
+        String result = null;
+        DataInputStream in = null;
+        try {
+            File f = new File(file);
+            byte[] buffer = new byte[(int) f.length()];
+            in = new DataInputStream(new FileInputStream(f));
+            in.readFully(buffer);
+            result = new String(buffer);
+        } catch (IOException e) {
+            throw new RuntimeException("IO Erro", e);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+            }
+        }
+        return trimAll(result);
+    }
 }

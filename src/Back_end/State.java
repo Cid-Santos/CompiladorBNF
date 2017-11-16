@@ -9,26 +9,34 @@ import java.util.Set;
  * @author Cid
  */
 public class State {
-   public Set<Item> items;
+
+    public Set<Item> items;
+
     private State(Set<Item> items) {
         this.items = items;
     }
-    private static Map<Set<Item>, State> map = new HashMap<Set<Item>, State>();
+
+    private static final Map<Set<Item>, State> map = new HashMap<>();
+
     public static State v(Set<Item> items) {
         State ret = map.get(items);
-        if(ret == null) {
+        if (ret == null) {
             ret = new State(items);
             map.put(items, ret);
         }
         return ret;
     }
+
+    @Override
     public String toString() {
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         ret.append("\n");
-        for(Item item : items) {
+        items.stream().map((item) -> {
             ret.append(item);
+            return item;
+        }).forEachOrdered((_item) -> {
             ret.append("\n");
-        }
+        });
         return ret.toString();
-    }  
+    }
 }

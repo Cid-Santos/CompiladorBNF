@@ -1,6 +1,0 @@
-FIRST(<S>) = {"a"}
-FIRST(<Q>) = {"a", "b"}
-FIRST(<P>) = {"b"}
-FOLLOW(<S>) = {$}
-FOLLOW(<Q>) = {"b"}
-FOLLOW(<P>) = {"b"}

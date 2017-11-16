@@ -2,14 +2,12 @@ package primcipal;
 
 import Back_end.Generator;
 import Back_end.Production;
-import Back_end.Util;
 import Front_end.Grammar;
 import Front_end.Midle_front;
 import Front_end.Statment;
 import java.util.LinkedHashSet;
-import java.util.Scanner;
 import java.util.Set;
-import sun.security.krb5.internal.rcache.DflCache;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,10 +20,11 @@ import sun.security.krb5.internal.rcache.DflCache;
  */
 public class Principal extends javax.swing.JFrame {
 
-        public static Set<String> terminais;
-        public static Set<String> nonterminais;
-        public static Set<Production> productions;
-        public static String start; 
+    public static Set<String> terminais;
+    public static Set<String> nonterminais;
+    public static Set<Production> productions;
+    public static String start;
+
     /**
      * Creates new form Principal
      */
@@ -205,12 +204,27 @@ public class Principal extends javax.swing.JFrame {
         jMenu3.add(jMenuItem1);
 
         jMenuItem2.setText("LR(1)");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem2);
 
         jMenuItem3.setText("SLR(1)");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem3);
 
         jMenuItem4.setText("LALR");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem4);
 
         jMenuBar1.add(jMenu3);
@@ -233,65 +247,61 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    public int conta(Statment s){
-        int i =0;
-        while(s.definitions[i]!=null){
+    public int conta(Statment s) {
+        int i = 0;
+        while (s.definitions[i] != null) {
             i++;
-        }    
-        
+        }
         return i;
-        
-    } 
-    private void convert_grammar(){
+    }
+
+    private void convert_grammar() {
         Midle_front aux = new Midle_front();
-        
+
         terminais = aux.terminais();
         nonterminais = aux.nonterminais();
-        productions  = new  LinkedHashSet<>();
-        
+        productions = new LinkedHashSet<>();
+
         Grammar grammar = Midle_front.grammar;
         String nonTerminal = "";
         Production production;
         int cont = 0;
         int pega = 0;
-        Statment[] statments = grammar.statments; 
+        Statment[] statments = grammar.statments;
         for (Statment statment : statments) {
-            
+
             if (statment != null) {
-                if (pega == 0){
+                if (pega == 0) {
                     start = statment.nonTerminal.token;
                     pega++;
                 }
                 nonTerminal = statment.nonTerminal.token;
-                int i=0;
+                int i = 0;
                 cont = conta(statment);
                 String[] definitions = new String[cont];
-                while(statment.definitions[i]!=null){
+                while (statment.definitions[i] != null) {
                     definitions[i] = statment.definitions[i].token;
                     i++;
                 }
-            production =  new Production(nonTerminal, definitions);
-            productions.add(production);
+                production = new Production(nonTerminal, definitions);
+                productions.add(production);
             }
-        }       
+        }
     }
-    
-    
+
+
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-   
         Midle_front aux = new Midle_front();
-        if (Midle_front.grammar!=null) {
+        if (Midle_front.grammar != null) {
             String first_follow = aux.processa_first_follow();
             jTOutPut.setText(jTOutPut.getText() + first_follow);
         } else {
-
-            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+            JOptionPane.showMessageDialog(null, "MENSAGEM: FAVOR ABRIR ARQUIVO", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // Definir arquivos de entrada
+        // Definir arquivos de entrada  
         Midle_front aux = new Midle_front();
         Midle_front.inputString = aux.ler_arquio();
         jTParsing.setText("ENTRADA \n" + Midle_front.inputString + "\n");
@@ -303,47 +313,93 @@ public class Principal extends javax.swing.JFrame {
             String token = aux.processa_token();
             jTOutPut.setText(token);
         } else {
-
-            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+            JOptionPane.showMessageDialog(null, "MENSAGEM: FAVOR ABRIR ARQUIVO", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
-        // aux.processa_first_follow();
-        // aux.gramatica();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         Midle_front aux = new Midle_front();
-
         if (Midle_front.tokens.length > 0) {
             String gramar = aux.processa_gramatica();
-            jTOutPut.setText(jTOutPut.getText() + "\n\nGRAMATICA \n"+gramar);
+            jTOutPut.setText(jTOutPut.getText() + "\n\nGRAMATICA \n" + gramar);
         } else {
-
-            System.out.println("MENSAGEM: FAVOR ABRIR ARQUIVO");
+            JOptionPane.showMessageDialog(null, "MENSAGEM: FAVOR ABRIR ARQUIVO", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        //LR(0)
         convert_grammar();
-        
         Back_end.Grammar grammar = new Back_end.Grammar();
         grammar.nonterminals = nonterminais;
         grammar.terminals = terminais;
         grammar.productions = productions;
         grammar.start = start;
-        
+
         Generator jlr = new Generator(grammar);
         try {
             jlr.computeFirstFollowNullable();
             jlr.generateLR0Table();
-            jlr.generateOutput();
-        } catch(Back_end.Error e) {
-            System.err.println("Error performing LR(0) construction: "+e);
-            System.exit(1);
-            return;
-        } 
+            jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0)\n" + jlr.generateOutput());
+        } catch (Back_end.Error e) {
+            JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (0): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        //LR(1)
+        convert_grammar();
+        Back_end.Grammar grammar = new Back_end.Grammar();
+        grammar.nonterminals = nonterminais;
+        grammar.terminals = terminais;
+        grammar.productions = productions;
+        grammar.start = start;
+        Generator jlr = new Generator(grammar);
+        try {
+            jlr.computeFirstFollowNullable();
+            jTParsing.setText(jTParsing.getText() + "\nGERAR TABELA LR(1)\n" + jlr.generateLR1Table());
+            jTParsing.setText(jTParsing.getText() + "\n\nPARSING LR(1)\n" + jlr.generateOutput());
+        } catch (Back_end.Error e) {
+            JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        //SLR
+        convert_grammar();
+        Back_end.Grammar grammar = new Back_end.Grammar();
+        grammar.nonterminals = nonterminais;
+        grammar.terminals = terminais;
+        grammar.productions = productions;
+        grammar.start = start;
+        Generator jslr = new Generator(grammar);
+        try {
+            jslr.computeFirstFollowNullable();
+            jslr.generateSLR1Table();
+            jTParsing.setText(jTParsing.getText() + "\nPARSING SLR(1))\n" + jslr.generateOutput());
+        } catch (Back_end.Error e) {
+            JOptionPane.showMessageDialog(null, "Erro ao executar a construção SLR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        //LALR
+        convert_grammar();
+        Back_end.Grammar grammar = new Back_end.Grammar();
+        grammar.nonterminals = nonterminais;
+        grammar.terminals = terminais;
+        grammar.productions = productions;
+        grammar.start = start;
+        Generator jlalr = new Generator(grammar);
+        try {
+            jlalr.computeFirstFollowNullable();
+            jTParsing.setText(jTParsing.getText() + "\nGERAR TABELA LALR(1)" + jlalr.generateLALR1Table());
+            jTParsing.setText(jTParsing.getText() + "\n\nPARSING LALR(1)\n" + jlalr.generateOutput());
+        } catch (Back_end.Error e) {
+            JOptionPane.showMessageDialog(null, "Erro ao executar a construção LALR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments

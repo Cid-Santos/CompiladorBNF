@@ -11,15 +11,17 @@ public class Production {
 
     public String lhs;
     public String[] rhs;
+
     public Production(String lhs, String[] rhs) {
-        this.lhs = lhs; this.rhs = rhs;
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
-    private static Map<Pair<String, String[]>, Production> map =
-        new HashMap<Pair<String, String[]>, Production>();
+    private static Map<Pair<String, String[]>, Production> map = new HashMap<>();
+
     public static Production v(String lhs, String[] rhs) {
-        Pair<String, String[]> pair = new Pair<String, String[]>(lhs, rhs);
+        Pair<String, String[]> pair = new Pair<>(lhs, rhs);
         Production ret = map.get(pair);
-        if(ret == null) {
+        if (ret == null) {
             ret = new Production(lhs, rhs);
             map.put(pair, ret);
         }
@@ -27,14 +29,16 @@ public class Production {
     }
 
     public Production() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Ainda não suportado."); //Para alterar o corpo de métodos gerados, escolha Ferramentas | Modelos.
     }
+
+    @Override
     public String toString() {
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         ret.append(lhs);
         //ret.append(" ->");
-        for(String sym : rhs) {
-            ret.append(" "+sym);
+        for (String sym : rhs) {
+            ret.append(" ").append(sym);
         }
         return ret.toString();
     }

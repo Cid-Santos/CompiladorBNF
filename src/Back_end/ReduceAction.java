@@ -6,7 +6,7 @@ package Back_end;
  */
 public class ReduceAction extends Action {
 
-    Production rule; // the production to reduce by
+    Production rule; // a produção a reduzir por
 
     public ReduceAction(Production rule) {
         this.rule = rule;
@@ -28,6 +28,6 @@ public class ReduceAction extends Action {
 
     @Override
     public String toString() {
-        return "reduce " + rule;
+        return "reduzir " + rule;
     }
 }
