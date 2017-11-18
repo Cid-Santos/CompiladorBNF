@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
@@ -41,6 +43,64 @@ public class Midle_front {
         return inputString;
     }
 
+    public String[][] gera_tabela(String table) {
+
+        List<String> simbolos = new ArrayList<>();
+
+        String[] separado_linha = table.split("\n");
+        String[] dados = separado_linha[0].split(" ");
+        int estado = Integer.parseInt(dados[3]);
+        int transicoes = Integer.parseInt(dados[6]);
+        for (int i = 1; i <= transicoes; i++) {
+            String[] aux = separado_linha[i].split(" ");
+            if (!simbolos.contains(aux[1])) {
+                simbolos.add(aux[1]);
+            }
+        }
+
+        String[][] tabela = new String[estado + 1][(simbolos.size()) + 1];
+        String tipo = new String();
+        for (int i = 0; i < simbolos.size(); i++) {
+            System.out.println(simbolos.get(i));
+            tabela[0][i+1] = ""+simbolos.get(i);
+        }
+        for (int i = 1; i < estado+1; i++) {
+            tabela[i][0] = ""+(i-1);
+        }
+        for (int i = 1; i <= transicoes; i++) {
+            String[] aux = separado_linha[i].split(" ");
+
+            int estado_atual = Integer.parseInt(aux[0]);
+            String simbolo_atual = aux[1];
+            int index_simbolo = simbolos.indexOf(aux[1]);
+            if ("reduce".equals(aux[2])) {
+                tipo = "r";
+            } else {
+                tipo = "";
+            }
+            String texto = tipo + aux[3];
+            tabela[estado_atual + 1][index_simbolo + 1] = texto;
+        }
+        
+        
+        
+        for (int i = 0; i < estado+1; i++) {
+            for (int j = 0; j < simbolos.size()+1 ; j++) {
+                if (tabela[i][j] != null) {
+                    System.out.print(tabela[i][j]+"\t");
+                } else {
+                    tabela[i][j] = "-";
+                    System.out.print("-\t");
+                }
+            }
+            System.out.println("\n");
+        }
+
+        System.out.println("AQUI");
+
+        return tabela;
+    }
+    
     public String processa_token() {
         String dados = "";
         // Obtem Array Token

@@ -6,6 +6,7 @@ import Front_end.Grammar;
 import Front_end.Midle_front;
 import Front_end.Statment;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
@@ -24,6 +25,7 @@ public class Principal extends javax.swing.JFrame {
     public static Set<String> nonterminais;
     public static Set<Production> productions;
     public static String start;
+    public String [][] tabela;
 
     /**
      * Creates new form Principal
@@ -84,6 +86,11 @@ public class Principal extends javax.swing.JFrame {
 
         jTParsing.setColumns(20);
         jTParsing.setRows(5);
+        jTParsing.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTParsingMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(jTParsing);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -103,6 +110,11 @@ public class Principal extends javax.swing.JFrame {
 
         jTOutPut.setColumns(20);
         jTOutPut.setRows(5);
+        jTOutPut.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTOutPutMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTOutPut);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -264,15 +276,24 @@ public class Principal extends javax.swing.JFrame {
 
         Grammar grammar = Midle_front.grammar;
         String nonTerminal = "";
-        Production production;
+        Production production = null;
         int cont = 0;
         int pega = 0;
         Statment[] statments = grammar.statments;
+              
+        String [] regras = new String[2];
+        regras[0] = statments[0].nonTerminal.token;
+        regras[1] = "$";
+        
+        production = new Production("<Z>", regras);
+
+        productions.add(production);
+        start = "<Z>";
         for (Statment statment : statments) {
 
             if (statment != null) {
                 if (pega == 0) {
-                    start = statment.nonTerminal.token;
+                    //start = statment.nonTerminal.token;
                     pega++;
                 }
                 nonTerminal = statment.nonTerminal.token;
@@ -332,7 +353,9 @@ public class Principal extends javax.swing.JFrame {
         convert_grammar();
         Back_end.Grammar grammar = new Back_end.Grammar();
         grammar.nonterminals = nonterminais;
+        grammar.nonterminals.add("<Z>");
         grammar.terminals = terminais;
+        grammar.terminals.add("$");
         grammar.productions = productions;
         grammar.start = start;
 
@@ -340,7 +363,10 @@ public class Principal extends javax.swing.JFrame {
         try {
             jlr.computeFirstFollowNullable();
             jlr.generateLR0Table();
-            jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0)\n" + jlr.generateOutput());
+            String auxiliar = jlr.generateOutput();
+            Midle_front aux = new Midle_front();
+            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0)\n" +auxiliar);
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (0): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -400,6 +426,30 @@ public class Principal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LALR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jTParsingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTParsingMouseClicked
+
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+            evt.consume();
+            Object[] options = {"Confirmar", "Cancelar"};
+            int choice = JOptionPane.showOptionDialog(null, "Deseja limpar ?", "Informação", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+            if (choice == JOptionPane.YES_OPTION) {
+                jTParsing.setText("");
+            }
+        }
+
+
+    }//GEN-LAST:event_jTParsingMouseClicked
+
+    private void jTOutPutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTOutPutMouseClicked
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+            evt.consume();
+            Object[] options = {"Confirmar", "Cancelar"};
+            int choice = JOptionPane.showOptionDialog(null, "Deseja limpar ?", "Informação", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+            if (choice == JOptionPane.YES_OPTION) {
+                jTOutPut.setText("");
+            }
+        }    }//GEN-LAST:event_jTOutPutMouseClicked
 
     /**
      * @param args the command line arguments
