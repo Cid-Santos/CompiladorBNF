@@ -1,6 +1,6 @@
 # CompiladorBNF
 
-Especicação
+# Especicação
 
 O objetivo deste programa é ser um compilador básico para traduzir uma gramática livre
 de contexto (GLC), representada pela Forma Normal de Bakus (BNF-Backus Normal Form)
@@ -23,7 +23,7 @@ Este programa foi desenvolvido em duas etapas:
       a partir da tabela sintática. 
 	  
 	  
-Backus-Naur Form
+# Backus-Naur Form
 	Define uma notação textual compacta para as produções de uma gramática livre de contexto Notação
 	BNF básica:
 	
@@ -34,7 +34,11 @@ Backus-Naur Form
     [... ]   opcional
 	
 		
-Exemplo
+# Exemplo
 
 < S >::="a"< S >
 < Q >::="a"< Q > |< Q > "b" |""
+
+
+
+
