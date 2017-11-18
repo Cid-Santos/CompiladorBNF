@@ -39,6 +39,7 @@ Este programa foi desenvolvido em duas etapas:
 # Exemplo
 
 < S >::="a"< S >
+
 < Q >::="a"< Q > |< Q > "b" |""
 
 
