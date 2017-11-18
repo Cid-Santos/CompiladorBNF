@@ -1,5 +1,5 @@
 # CompiladorBNF
-==========
+
  Especicação
 ---
 O objetivo deste programa é ser um compilador básico para traduzir uma gramática livre
