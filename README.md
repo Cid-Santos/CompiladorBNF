@@ -1,7 +1,7 @@
 # CompiladorBNF
-
-# Especicação
-
+==========
+ Especicação
+---
 O objetivo deste programa é ser um compilador básico para traduzir uma gramática livre
 de contexto (GLC), representada pela Forma Normal de Bakus (BNF-Backus Normal Form)
 para uma representação de classicação de gramáticas GLC.
