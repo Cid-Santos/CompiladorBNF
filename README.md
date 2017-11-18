@@ -8,12 +8,12 @@ para uma representação de classicação de gramáticas GLC.
 
 Este programa foi desenvolvido em duas etapas:
 
-1. Front-end
+**1. Front-end**
 	• Análise Léxica: Analisador léxico para GLC representada por um BNF.
 	• Análise Sintática e Semântica: Analisador sintático para uma GLC representada por um BNF.
 	  Conjunto First e Conjunto Folow.
 	  
-2. Back-end
+**2. Back-end**
 	• Classicação da gramática: Análise sintática para a gramática gerada.
 	  Geração de uma tabela para cada uma dos analisadores sintáticos (LR(0), LR(1), sLR(1), e LALR(1)) 
 	  onde se descreve se a gramática pertence ou não ao analisador sintático utilizado.	  
