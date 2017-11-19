@@ -25,7 +25,7 @@ public class Principal extends javax.swing.JFrame {
     public static Set<String> nonterminais;
     public static Set<Production> productions;
     public static String start;
-    public String [][] tabela;
+    public String[][] tabela;
 
     /**
      * Creates new form Principal
@@ -280,8 +280,7 @@ public class Principal extends javax.swing.JFrame {
         int cont = 0;
         int pega = 0;
         Statment[] statments = grammar.statments;
-              
-        
+
         for (Statment statment : statments) {
 
             if (statment != null) {
@@ -354,10 +353,10 @@ public class Principal extends javax.swing.JFrame {
         try {
             jlr.computeFirstFollowNullable();
             jlr.generateLR0Table();
-            String auxiliar = jlr.generateOutput();
+            String auxiliar = jlr.generateOutput();        
+            jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0))\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            tabela = aux.gera_tabela(auxiliar);
-            jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0)\n" +auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(0)\n" + aux.gera_tabela(auxiliar));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (0): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -374,11 +373,11 @@ public class Principal extends javax.swing.JFrame {
         Generator jlr = new Generator(grammar);
         try {
             jlr.computeFirstFollowNullable();
-            jTParsing.setText(jTParsing.getText() + "\nGERAR TABELA LR(1)\n" + jlr.generateLR1Table());
-            jTParsing.setText(jTParsing.getText() + "\n\nPARSING LR(1)\n" + jlr.generateOutput());
+            jlr.generateLR1Table();
             String auxiliar = jlr.generateOutput();
+            jTParsing.setText(jTParsing.getText() + "\n\nPARSING LR(1)\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(1)\n" + aux.gera_tabela(auxiliar));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -396,7 +395,10 @@ public class Principal extends javax.swing.JFrame {
         try {
             jslr.computeFirstFollowNullable();
             jslr.generateSLR1Table();
-            jTParsing.setText(jTParsing.getText() + "\nPARSING SLR(1))\n" + jslr.generateOutput());
+            String auxiliar = jslr.generateOutput();
+            jTParsing.setText(jTParsing.getText() + "\nPARSING SLR(1))\n" + auxiliar);
+            Midle_front aux = new Midle_front();
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA SLR(1)\n" + aux.gera_tabela(auxiliar));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção SLR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -414,8 +416,11 @@ public class Principal extends javax.swing.JFrame {
         Generator jlalr = new Generator(grammar);
         try {
             jlalr.computeFirstFollowNullable();
-            jTParsing.setText(jTParsing.getText() + "\nGERAR TABELA LALR(1)" + jlalr.generateLALR1Table());
-            jTParsing.setText(jTParsing.getText() + "\n\nPARSING LALR(1)\n" + jlalr.generateOutput());
+            jlalr.generateLALR1Table();
+            String auxiliar = jlalr.generateOutput();
+            jTParsing.setText(jTParsing.getText() + "\nPARSING LALR(1))\n" + auxiliar);
+            Midle_front aux = new Midle_front();
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LASLR(1)\n" + aux.gera_tabela(auxiliar));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LALR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }

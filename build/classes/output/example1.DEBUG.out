@@ -22,13 +22,3 @@ Produção:
 <S> ::= <C> "c" 
 <C> ::= "0" <C> 
 <C> ::= "1" 
-
-   FIRST   
-FIRST(<S>) = {"0", "1"}
-FIRST(<C>) = {"0", "1"}
-FIRST(<C>) = {"0", "1"}
-
-   FOLLOW   
-FOLLOW(<S>) = {$}
-FOLLOW(<C>) = {"c"}
-FOLLOW(<C>) = {"c"}

@@ -1,6 +1,0 @@
-FIRST(<S>) = {"0", "1"}
-FIRST(<C>) = {"0", "1"}
-FIRST(<C>) = {"0", "1"}
-FOLLOW(<S>) = {$}
-FOLLOW(<C>) = {"c"}
-FOLLOW(<C>) = {"c"}

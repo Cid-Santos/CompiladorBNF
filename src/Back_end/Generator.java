@@ -540,8 +540,8 @@ public class Generator {
                 stateMap.put(state, i++);
             }
         }
-        outPut = "Total de Colunas " + String.valueOf(i);
-        outPut += String.valueOf("  Linhas " + table.size());
+        outPut = "Total de estado = " + String.valueOf(i);
+        outPut += String.valueOf("  transição = " + table.size());
         for (Map.Entry<Pair<State, String>, Action> e : table.entrySet()) {
             Pair<State, String> p = e.getKey();
             outPut += ("\n" + stateMap.get(p.getO1()) + " " + p.getO2() + " ");
