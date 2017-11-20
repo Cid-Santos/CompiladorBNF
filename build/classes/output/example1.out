@@ -1,0 +1,4 @@
+FIRST(<E>) = {"x"}
+FIRST(<T>) = {"x"}
+FOLLOW(<E>) = {$}
+FOLLOW(<T>) = {"a"}

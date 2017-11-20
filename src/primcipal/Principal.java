@@ -274,18 +274,30 @@ public class Principal extends javax.swing.JFrame {
         nonterminais = aux.nonterminais();
         productions = new LinkedHashSet<>();
 
+        
+        
         Grammar grammar = Midle_front.grammar;
         String nonTerminal = "";
         Production production;
+        
         int cont = 0;
         int pega = 0;
         Statment[] statments = grammar.statments;
 
+        String auxiliar = "<Z>";
+        String [] regras = new String[2];
+        regras[0] = statments[0].nonTerminal.token;
+        regras[1] = "$";
+        start = "<Z>";
+        production = new Production(auxiliar,regras);
+        productions.add(production);
+        
+        
         for (Statment statment : statments) {
 
             if (statment != null) {
                 if (pega == 0) {
-                    start = statment.nonTerminal.token;
+                    //start = statment.nonTerminal.token;
                     pega++;
                 }
                 nonTerminal = statment.nonTerminal.token;
@@ -345,7 +357,9 @@ public class Principal extends javax.swing.JFrame {
         convert_grammar();
         Back_end.Grammar grammar = new Back_end.Grammar();
         grammar.nonterminals = nonterminais;
+        grammar.nonterminals.add("<Z>");
         grammar.terminals = terminais;
+        grammar.terminals.add("$");
         grammar.productions = productions;
         grammar.start = start;
 
@@ -356,7 +370,8 @@ public class Principal extends javax.swing.JFrame {
             String auxiliar = jlr.generateOutput();        
             jTParsing.setText(jTParsing.getText() + "\nPARSING LR(0))\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(0)\n" + aux.gera_tabela(auxiliar));
+            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(0)\n" + aux.Imprime_Tabela(tabela));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (0): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -367,7 +382,9 @@ public class Principal extends javax.swing.JFrame {
         convert_grammar();
         Back_end.Grammar grammar = new Back_end.Grammar();
         grammar.nonterminals = nonterminais;
+        grammar.nonterminals.add("<Z>");
         grammar.terminals = terminais;
+        grammar.terminals.add("$");
         grammar.productions = productions;
         grammar.start = start;
         Generator jlr = new Generator(grammar);
@@ -377,7 +394,8 @@ public class Principal extends javax.swing.JFrame {
             String auxiliar = jlr.generateOutput();
             jTParsing.setText(jTParsing.getText() + "\n\nPARSING LR(1)\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(1)\n" + aux.gera_tabela(auxiliar));
+            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LR(1)\n" + aux.Imprime_Tabela(tabela));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -387,8 +405,10 @@ public class Principal extends javax.swing.JFrame {
         //SLR
         convert_grammar();
         Back_end.Grammar grammar = new Back_end.Grammar();
-        grammar.nonterminals = nonterminais;
+       grammar.nonterminals = nonterminais;
+        grammar.nonterminals.add("<Z>");
         grammar.terminals = terminais;
+        grammar.terminals.add("$");
         grammar.productions = productions;
         grammar.start = start;
         Generator jslr = new Generator(grammar);
@@ -398,7 +418,8 @@ public class Principal extends javax.swing.JFrame {
             String auxiliar = jslr.generateOutput();
             jTParsing.setText(jTParsing.getText() + "\nPARSING SLR(1))\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            jTParsing.setText(jTParsing.getText() + "\n\nTABELA SLR(1)\n" + aux.gera_tabela(auxiliar));
+            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA SLR(1)\n" + aux.Imprime_Tabela(tabela));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção SLR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -409,8 +430,10 @@ public class Principal extends javax.swing.JFrame {
         //LALR
         convert_grammar();
         Back_end.Grammar grammar = new Back_end.Grammar();
-        grammar.nonterminals = nonterminais;
+       grammar.nonterminals = nonterminais;
+        grammar.nonterminals.add("<Z>");
         grammar.terminals = terminais;
+        grammar.terminals.add("$");
         grammar.productions = productions;
         grammar.start = start;
         Generator jlalr = new Generator(grammar);
@@ -420,7 +443,8 @@ public class Principal extends javax.swing.JFrame {
             String auxiliar = jlalr.generateOutput();
             jTParsing.setText(jTParsing.getText() + "\nPARSING LALR(1))\n" + auxiliar);
             Midle_front aux = new Midle_front();
-            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LASLR(1)\n" + aux.gera_tabela(auxiliar));
+            tabela = aux.gera_tabela(auxiliar);
+            jTParsing.setText(jTParsing.getText() + "\n\nTABELA LASLR(1)\n" + aux.Imprime_Tabela(tabela));
         } catch (Back_end.Error e) {
             JOptionPane.showMessageDialog(null, "Erro ao executar a construção LALR (1): " + e, "Erro", JOptionPane.ERROR_MESSAGE);
         }

@@ -28,6 +28,7 @@ public final class Grammar {
             int nonTerminalIndex = 0;
             // Criar declarações da matriz de tokens...
             do {
+                
                 // Se Nonterminal antes ASSIGNMENT
                 if (tokens[tokenIndex].type.equals("NONTERMINAL") && tokens[tokenIndex + 1].type.equals("PRODUCAO")) {
                     // Incremento para próximo índice de segmentos
@@ -56,6 +57,7 @@ public final class Grammar {
                     definitionIndex = 0;
                 } // Else é a definição
                 else {
+                    
                     // Token de envio para definição de declaração
                     statments[statmentIndex].definitions[definitionIndex] = tokens[tokenIndex];
                     // Incremento para o próximo Índice de Definição

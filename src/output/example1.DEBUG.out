@@ -1,24 +1,30 @@
 
    TOKENS   
-<S> NONTERMINAL
+<E> NONTERMINAL
 ::= PRODUCAO
-<C> NONTERMINAL
-"c" TERMINAL
-<C> NONTERMINAL
+<T> NONTERMINAL
+"a" TERMINAL
+<E> NONTERMINAL
+| PIPE
+<T> NONTERMINAL
+<T> NONTERMINAL
 ::= PRODUCAO
-"0" TERMINAL
-<C> NONTERMINAL
-<C> NONTERMINAL
-::= PRODUCAO
-"1" TERMINAL
+"x" TERMINAL
 
    GRAMÁTICA   
 Não Terminais: 
-<S>
-<C>
-<C>
+<E>
+<T>
 
 Produção: 
-<S> ::= <C> "c" 
-<C> ::= "0" <C> 
-<C> ::= "1" 
+<E> ::= <T> "a" <E> 
+<E> ::= <T> 
+<T> ::= "x" 
+
+   FIRST   
+FIRST(<E>) = {"x"}
+FIRST(<T>) = {"x"}
+
+   FOLLOW   
+FOLLOW(<E>) = {$}
+FOLLOW(<T>) = {"a"}

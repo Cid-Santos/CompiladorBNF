@@ -43,7 +43,7 @@ public class Midle_front {
         return inputString;
     }
 
-    public String gera_tabela(String table) {
+    public String[][] gera_tabela(String table) {
 
         List<String> simbolos = new ArrayList<>();
 
@@ -80,13 +80,13 @@ public class Midle_front {
             String texto = tipo + aux[3];
             tabela[estado_atual + 1][index_simbolo + 1] = texto;
         }
-        return Imprime_Tabela(tabela, estado, simbolos);
+        return tabela;
     }
 
-    public String Imprime_Tabela(String[][] tabela, int estado, List<String> simbolos) {
+    public String Imprime_Tabela(String[][] tabela) {
         String output = "";
-        for (int i = 0; i < estado + 1; i++) {
-            for (int j = 0; j < simbolos.size() + 1; j++) {
+        for (int i = 0; i < tabela.length; i++) {
+            for (int j = 0; j < tabela[0].length; j++) {
                 if (tabela[i][j] != null) {
                     output += (tabela[i][j] + "\t");
                 } else {
