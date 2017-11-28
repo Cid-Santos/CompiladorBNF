@@ -53,7 +53,10 @@ public final class Token {
         } else if (isProducao(token)) {
             type = "PRODUCAO";
             message = "produção (->)";
-        } else {
+        } else if (isOperator(token)) {
+            type = "TERMINAL";
+            message = "terminal";
+        }else {
             type = "ERRO";
             message = "ERRO CODE 0: Entrada não esta de acordo com o formato";
         }
@@ -75,6 +78,16 @@ public final class Token {
         return isProducao;
     }
 
+        public boolean isOperator(String ch) {
+        if ("+".equals(ch) || "-".equals(ch) || "*".equals(ch)
+                || "/".equals(ch) || ">".equals(ch) || "<".equals(ch)
+                || "=".equals(ch)) {
+            return (true);
+        }
+        return (false);
+    }
+
+    
     public boolean isOpcional(String s) {
         boolean isOpcional = false;
         if (s.contains("[") && s.contains("]")) {
